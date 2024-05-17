@@ -6,14 +6,14 @@
 #ifndef MUDUO_NET_CURRENTTHREAD_H
 #define MUDUO_NET_CURRENTTHREAD_H
 
-typedef std::thread::id tid;
+#include "Thread.h"
 
 namespace CurrentThread {
     // thread_local 线程局部变量
-    thread_local tid t_cacheTid;
-    thread_local char t_tidString[32];
-    thread_local int t_tidStringLength = 6;
-    thread_local const char* t_threadName = "default";
+    extern thread_local tid t_cacheTid;
+    extern thread_local char t_tidString[32];
+    extern thread_local int t_tidStringLength;
+    extern thread_local const char* t_threadName;
 
     void cacheTid();
 

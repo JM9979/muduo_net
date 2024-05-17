@@ -1,10 +1,14 @@
+set(base_SRCS
+        CountDownLatch.cpp
+        Thread.cpp
+)
+
+add_library(muduo_base ${base_SRCS})
 
 
-add_subdirectory(./test)
+#install(TARGETS muduo_base DESTINATION lib)
 
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
-include_directories(.)
+#file(GLOB HEADERS "*.h")
+#install(FILES ${HEADERS} DESTINATION include/muduo/base)
 
-aux_source_directory(. SRC)
-
-add_library(muduo_base ${SRC})
+add_subdirectory(test)

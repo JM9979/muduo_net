@@ -9,6 +9,14 @@
 #include <sys/prctl.h>
 
 
+namespace CurrentThread {
+    // thread_local 线程局部变量
+    thread_local ::tid t_cacheTid;
+    thread_local char t_tidString[32];
+    thread_local int t_tidStringLength = 6;
+    thread_local const char* t_threadName = "default";
+}
+
 tid getTid() { return std::this_thread::get_id(); }
 
 void CurrentThread::cacheTid() {
