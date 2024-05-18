@@ -4,3 +4,6 @@ target_link_libraries(EventLoop_test muduo_net)
 
 add_executable(EventLoop_test1 EventLoop_test1.cpp)
 target_link_libraries(EventLoop_test1 muduo_net)
+
+add_executable(Reactor_test Reactor_test.cpp)
+target_link_libraries(Reactor_test muduo_net)
