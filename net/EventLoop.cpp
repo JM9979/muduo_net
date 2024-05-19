@@ -6,13 +6,27 @@
 #include "Poller.h"
 
 #include <poll.h>
+#include <sys/eventfd.h>
 
 thread_local EventLoop* t_loopInThisThread = nullptr;
+
+const int kPollTimeMs = 10000;
+
+int createEventFd() {
+    int evtfd = ::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
+    if(evtfd < 0) {
+        abort();
+    }
+    return evtfd;
+}
 
 EventLoop::EventLoop()
     : looping_(false),
     threadId_(CurrentThread::tid()),
     quit_(false),
+    wakeupFd_(createEventFd()),
+    wakeupChannel_(new Channel(this, wakeupFd_)),
+    callingPendingFunctors_(false),
     poller_(Poller::newDefaultPoller(this))
     {
     if(t_loopInThisThread != nullptr) {
@@ -20,6 +34,8 @@ EventLoop::EventLoop()
     } else {
         t_loopInThisThread = this;
     }
+    wakeupChannel_->setReadCallback(std::bind(&EventLoop::handleRead, this));
+    wakeupChannel_->enableReading();
 }
 
 EventLoop::~EventLoop() {
@@ -34,24 +50,67 @@ void EventLoop::loop() {
     looping_ = true;
     while(!quit_) {
         activeChannels_.clear();
-        poller_->poll(5, &activeChannels_);
+        poller_->poll(kPollTimeMs, &activeChannels_);
         for(auto &iter : activeChannels_) {
             iter->handleEvent();
         }
+        doPendingFunctors();
     }
     looping_ = false;
 }
 
 void EventLoop::quit() {
     quit_ = true;
+    if(!isInLoopThread()) {
+        wakeup();
+    }
 }
 
 void EventLoop::runInLoop(Functor&& cb) {
-
+    if(isInLoopThread()) {
+        cb();
+    } else {
+        queueInloop(std::forward<Functor>(cb));
+    }
 }
 
 void EventLoop::queueInloop(Functor&& cb) {
+    {
+        std::unique_lock<std::mutex> lock_(mutex_);
+        pendingFunctors_.emplace_back(std::move(cb));
+    }
 
+    if(!isInLoopThread() || callingPendingFunctors_) {
+        wakeup();
+    }
+}
+
+void EventLoop::doPendingFunctors() {
+    std::vector<Functor> functors;
+    callingPendingFunctors_ = true;
+    {
+        std::unique_lock<std::mutex> lock_(mutex_);
+        functors.swap(pendingFunctors_);
+    }
+    for(auto &iter : functors) {
+        iter();
+    }
+    callingPendingFunctors_ = false;
+}
+
+void EventLoop::handleRead() const {
+    eventfd_t one;
+    int ret = eventfd_read(wakeupFd_, &one);
+    if(ret == -1) {
+
+    }
+}
+
+void EventLoop::wakeup() const {
+    int n = eventfd_write(wakeupFd_, 1);
+    if(n == -1 ) {
+
+    }
 }
 
 void EventLoop::updateChannel(Channel* channel) {

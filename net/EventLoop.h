@@ -15,6 +15,7 @@
 #include <atomic>
 #include <vector>
 #include <memory>
+#include <mutex>
 
 class Poller;
 
@@ -31,15 +32,29 @@ public:
     bool isInLoopThread() const { return threadId_ == CurrentThread::tid(); }
     void assertInLoopThread() const { assert(isInLoopThread()); }
 
+    void wakeup() const;
     void updateChannel(Channel*);
+private:
+
+    void doPendingFunctors();
+    void handleRead() const; // wakeup 读取数据出处理函数
+
+
 private:
     typedef std::vector<Channel*> ChannelList;
     std::atomic<bool> looping_;
     std::atomic<bool> quit_;
+    std::atomic<bool> callingPendingFunctors_;
     const tid threadId_;
     ChannelList activeChannels_;
 
+    // 实现跨线程间的通信, 统一事件处理
+    int wakeupFd_;
+    std::unique_ptr<Channel> wakeupChannel_;
+
     std::unique_ptr<Poller> poller_;
+    std::mutex mutex_;
+    std::vector<Functor> pendingFunctors_;
 };
 
 #endif //MUDUO_NET_EVENTLOOP_H
