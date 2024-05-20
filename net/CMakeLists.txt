@@ -4,6 +4,8 @@ set(net_SRCS
         Channel.cpp
         Poller.cpp
         EventLoopThread.cpp
+        Socket.cpp
+        Acceptor.cpp
 )
 
 add_library(muduo_net ${net_SRCS})
