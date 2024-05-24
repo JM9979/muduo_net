@@ -16,7 +16,7 @@ class Acceptor : noncopyable {
 public:
     typedef std::function<void (int sockfd, const struct sockaddr_in&)> NewConnectionCallback;
 
-    Acceptor(EventLoop* loop, bool reuseport, short port);
+    Acceptor(EventLoop* loop, bool reuseport, unsigned short port);
     ~Acceptor();
 
     void setNewConnectionCallback(const NewConnectionCallback& cb)

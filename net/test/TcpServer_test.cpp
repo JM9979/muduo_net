@@ -1,0 +1,41 @@
+//
+// Created by jm on 5/24/24.
+//
+
+#include "TcpServer.h"
+#include "EventLoop.h"
+
+#include <unistd.h>
+#include <cstring>
+
+void onConnection(const TcpConnectionPtr& conn) {
+    if(conn->connected()) {
+        printf("onConnection(): connection [%s] from %d\n", conn->name().c_str(), conn->peerAddr().sin_addr.s_addr);
+    } else {
+        printf("onConnection(): connection [%s] is down\n", conn->name().c_str());
+    }
+}
+
+void onMessage(const TcpConnectionPtr & conn, const char* data, size_t n) {
+    printf("onMessage: received %zd bytes from connection [%s]\n", n, conn->name().c_str());
+}
+
+int main() {
+    printf("main(): pid = %d\n", getpid());
+
+    struct  sockaddr_in listenAddr;
+    bzero(&listenAddr, sizeof listenAddr);
+    listenAddr.sin_family = AF_INET;
+    listenAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    listenAddr.sin_port = htons(9000);
+
+    EventLoop loop;
+    std::string name = "TcpServer";
+    TcpServer server(&loop, listenAddr, name);
+
+    server.setConnectionCallback(onConnection);
+    server.setMessageCallback(onMessage);
+
+    server.start();
+    loop.loop();
+}

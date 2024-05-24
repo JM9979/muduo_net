@@ -66,15 +66,15 @@ void EventLoop::quit() {
     }
 }
 
-void EventLoop::runInLoop(Functor&& cb) {
+void EventLoop::runInLoop(Functor& cb) {
     if(isInLoopThread()) {
         cb();
     } else {
-        queueInloop(std::forward<Functor>(cb));
+        queueInloop(cb);
     }
 }
 
-void EventLoop::queueInloop(Functor&& cb) {
+void EventLoop::queueInloop(Functor& cb) {
     {
         std::unique_lock<std::mutex> lock_(mutex_);
         pendingFunctors_.emplace_back(std::move(cb));

@@ -46,7 +46,7 @@ int Socket::createNonblocking() {
     return socket_fd;
 }
 
-void Socket::bindAddress(short port) {
+void Socket::bindAddress(unsigned short port) {
     struct sockaddr_in server_addr;
     bzero(&server_addr, sizeof server_addr);
     server_addr.sin_family = AF_INET;

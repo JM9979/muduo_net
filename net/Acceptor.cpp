@@ -9,7 +9,7 @@
 
 #include <unistd.h>
 
-Acceptor::Acceptor(EventLoop *loop, bool reuseport, short port)
+Acceptor::Acceptor(EventLoop *loop, bool reuseport, unsigned short port)
     : loop_(loop),
       acceptSocket_(Socket::createNonblocking()),
       acceptChannel_(loop, acceptSocket_.fd()),

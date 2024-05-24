@@ -20,7 +20,7 @@ public:
 
     static int createNonblocking();
 
-    void bindAddress(short port);
+    void bindAddress(unsigned short port);
 
     void listen();
 

@@ -6,6 +6,8 @@ set(net_SRCS
         EventLoopThread.cpp
         Socket.cpp
         Acceptor.cpp
+        TcpServer.cpp
+        TcpConnection.cpp
 )
 
 add_library(muduo_net ${net_SRCS})

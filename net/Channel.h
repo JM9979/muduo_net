@@ -7,6 +7,7 @@
 
 #include "noncopyable.h"
 #include <functional>
+#include <memory>
 
 class EventLoop;
 
@@ -16,6 +17,8 @@ public:
 
     Channel(EventLoop* loop, int fd);
     ~Channel();
+
+    void tie(const std::shared_ptr<void>&);
 
     void handleEvent();
     void setReadCallback(EventCallback cb) { readCallback_ = std::move(cb); }
@@ -56,6 +59,9 @@ private:
     int revents_;
     // 记录下标的
     int index_;
+
+    bool tied_;
+    std::weak_ptr<void> tie_;
 
     EventCallback readCallback_;
     EventCallback writeCallback_;

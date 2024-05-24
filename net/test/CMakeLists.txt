@@ -13,3 +13,6 @@ target_link_libraries(EventLoopThread_test muduo_net)
 
 add_executable(Acceptor_test Acceptor_test.cpp)
 target_link_libraries(Acceptor_test muduo_net)
+
+add_executable(TcpServer_test TcpServer_test.cpp)
+target_link_libraries(TcpServer_test muduo_net)
