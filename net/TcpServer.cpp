@@ -28,7 +28,7 @@ void TcpServer::start() {
         started_ = true;
     }
     if(!acceptor_->listenning()) {
-//        loop_->runInLoop(std::bind(&Acceptor::listen, this));
+        loop_->runInLoop([this]() { this->acceptor_->listen(); });
     }
 }
 
@@ -37,6 +37,7 @@ void TcpServer::newConnection(int sockfd, const struct sockaddr_in &peerAddr) {
 
     char buf[32];
     snprintf(buf, sizeof buf, "#%d", nextConnId_);
+    ++nextConnId_;
     std::string connName = name_ + buf;
 
     struct sockaddr_in localAddr;
@@ -48,7 +49,7 @@ void TcpServer::newConnection(int sockfd, const struct sockaddr_in &peerAddr) {
     }
 
     TcpConnectionPtr conn =
-            std::make_shared<TcpConnection>(loop_, connName, sockfd, localAddr, peerAddr);
+            std::make_shared<TcpConnection>(loop_, connName, sockfd, peerAddr, localAddr);
 
     connections_[connName] = conn;
 

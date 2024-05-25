@@ -27,8 +27,8 @@ public:
 
     void loop();
     void quit();
-    void runInLoop(Functor& cb);
-    void queueInloop(Functor& cb);
+    void runInLoop(const Functor& cb);
+    void queueInloop(const Functor& cb);
     bool isInLoopThread() const { return threadId_ == CurrentThread::tid(); }
     void assertInLoopThread() const { assert(isInLoopThread()); }
 

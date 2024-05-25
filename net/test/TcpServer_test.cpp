@@ -10,7 +10,8 @@
 
 void onConnection(const TcpConnectionPtr& conn) {
     if(conn->connected()) {
-        printf("onConnection(): connection [%s] from %d\n", conn->name().c_str(), conn->peerAddr().sin_addr.s_addr);
+        printf("onConnection(): connection [%s] from %d : %d\n",
+               conn->name().c_str(), conn->peerAddr().sin_addr.s_addr, conn->peerAddr().sin_port);
     } else {
         printf("onConnection(): connection [%s] is down\n", conn->name().c_str());
     }
@@ -27,7 +28,7 @@ int main() {
     bzero(&listenAddr, sizeof listenAddr);
     listenAddr.sin_family = AF_INET;
     listenAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    listenAddr.sin_port = htons(9000);
+    listenAddr.sin_port = 9000;
 
     EventLoop loop;
     std::string name = "TcpServer";
