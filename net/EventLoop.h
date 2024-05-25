@@ -34,6 +34,7 @@ public:
 
     void wakeup() const;
     void updateChannel(Channel*);
+    void removeChannel(Channel*);
 private:
 
     void doPendingFunctors();

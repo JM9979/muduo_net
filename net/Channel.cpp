@@ -18,17 +18,22 @@ Channel::Channel(EventLoop *loop, int fd)
     events_(0),
     revents_(0),
     index_(-1),
-    tied_(false)
+    tied_(false),
+    eventHanding_(false)
 {
 }
 
 Channel::~Channel() {
-
+    assert(!eventHanding_);
 }
 
 void Channel::handleEvent() {
-    if(revents_ & POLLPRI) {
+    eventHanding_ = true;
+    if(revents_ & POLLNVAL) {
 
+    }
+    if((revents_ & POLLHUP) && !(revents_ & POLLIN)) {
+        if(closeCallback_) closeCallback_();
     }
     if(revents_ & (POLLERR | POLLNVAL)) {
         if(errorCallback_) errorCallback_();
@@ -39,12 +44,16 @@ void Channel::handleEvent() {
     if(revents_ & POLLOUT) {
         if(writeCallback_) writeCallback_();
     }
-
-
+    eventHanding_ = false;
 }
 
 void Channel::update() {
     loop_->updateChannel(this);
+}
+
+void Channel::remove() {
+    assert(isNoneEvent());
+    loop_->removeChannel(this);
 }
 
 void Channel::tie(const std::shared_ptr<void> & obj) {

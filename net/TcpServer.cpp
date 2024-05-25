@@ -55,7 +55,16 @@ void TcpServer::newConnection(int sockfd, const struct sockaddr_in &peerAddr) {
 
     conn->setConnectionCallback(ConnectionCallback_);
     conn->setOnMessageCallback(MessageCallback_);
+    conn->setCloseCallback(std::bind(&TcpServer::removeConnection, this, _1));
+
     conn->connectEstablished();
+}
+
+void TcpServer::removeConnection(const TcpConnectionPtr& conn) {
+    loop_->assertInLoopThread();
+    size_t n = connections_.erase(conn->name());
+    assert(n == 1);
+    loop_->queueInloop(std::bind(&TcpConnection::connectDestroyed, conn));
 }
 
 

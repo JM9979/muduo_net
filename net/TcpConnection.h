@@ -29,17 +29,24 @@ public:
     ~TcpConnection();
     void setConnectionCallback(const ConnectionCallback& cb) { connectionCallback_ = cb; }
     void setOnMessageCallback(const MessageCallback& cb) { messageCallback_ = cb; }
+    void setCloseCallback(const CloseCallback& cb) { closeCallback_ = cb; }
 
     void connectEstablished();
+    void connectDestroyed();
+
     bool connected() { return state_ == kConnected; }
     const std::string& name() { return name_; }
     const struct sockaddr_in& peerAddr() { return peerAddr_; }
     const struct sockaddr_in& localAddr() { return localAddr_; }
-private:
-    enum StateE { kConnecting, kConnected, };
 
+private:
+    enum StateE { kConnecting, kConnected, kDisconnected };
     void setState(StateE s) { state_ = s; }
     void handleRead();
+    void handleWrite();
+    void handleClose();
+    void handleError();
+private:
 
     EventLoop* loop_;
     const std::string name_;
@@ -53,6 +60,7 @@ private:
 
     ConnectionCallback connectionCallback_;
     MessageCallback messageCallback_;
+    CloseCallback closeCallback_;
 };
 
 

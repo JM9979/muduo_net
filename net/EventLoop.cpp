@@ -77,7 +77,7 @@ void EventLoop::runInLoop(const Functor& cb) {
 void EventLoop::queueInloop(const Functor& cb) {
     {
         std::unique_lock<std::mutex> lock_(mutex_);
-        pendingFunctors_.emplace_back(std::move(cb));
+        pendingFunctors_.emplace_back(cb);
     }
 
     if(!isInLoopThread() || callingPendingFunctors_) {
@@ -117,4 +117,10 @@ void EventLoop::updateChannel(Channel* channel) {
     assert(channel->ownerLoop() == this);
     assertInLoopThread();
     poller_->updateChannel(channel);
+}
+
+void EventLoop::removeChannel(Channel *channel) {
+    assert(channel->ownerLoop());
+    assertInLoopThread();
+    poller_->removeChannel(channel);
 }

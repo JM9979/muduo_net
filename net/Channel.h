@@ -6,8 +6,10 @@
 #define MUDUO_NET_CHANNEL_H
 
 #include "noncopyable.h"
+
 #include <functional>
 #include <memory>
+#include <atomic>
 
 class EventLoop;
 
@@ -21,9 +23,10 @@ public:
     void tie(const std::shared_ptr<void>&);
 
     void handleEvent();
-    void setReadCallback(EventCallback cb) { readCallback_ = std::move(cb); }
-    void setWriteCallback(EventCallback cb) { writeCallback_ = std::move(cb); }
-    void setErrorCallback(EventCallback cb) { errorCallback_ = std::move(cb); }
+    void setReadCallback(const EventCallback& cb) { readCallback_ = cb; }
+    void setWriteCallback(const EventCallback& cb) { writeCallback_ = cb; }
+    void setErrorCallback(const EventCallback& cb) { errorCallback_ = cb; }
+    void setCloseCallback(const EventCallback& cb) { closeCallback_ = cb; }
 
     int fd() const { return fd_; }
     int events() const { return events_; }
@@ -47,6 +50,9 @@ public:
 
 private:
     void update();
+    void remove();
+
+private:
 
     static const int kNoneEvent;
     static const int kReadEvent;
@@ -54,6 +60,9 @@ private:
 
     EventLoop* loop_;
     const int fd_;
+
+    std::atomic<bool> eventHanding_;
+
     int events_;
     // poll返回的事件
     int revents_;
@@ -66,6 +75,7 @@ private:
     EventCallback readCallback_;
     EventCallback writeCallback_;
     EventCallback errorCallback_;
+    EventCallback closeCallback_;
 };
 
 

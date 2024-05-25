@@ -18,6 +18,7 @@ using std::placeholders::_3;
 
 
 typedef std::function<void (const TcpConnectionPtr&)> ConnectionCallback;
+typedef std::function<void (const TcpConnectionPtr&)> CloseCallback;
 typedef std::function<void (const TcpConnectionPtr&, const char* , size_t)> MessageCallback;
 
 #endif //MUDUO_NET_CALLBACKS_H

@@ -39,7 +39,7 @@ public:
 private:
     // Not thread safe, but in loop
     void newConnection(int sockfd, const struct sockaddr_in& peerAddr);
-
+    void removeConnection(const TcpConnectionPtr&);
 
 private:
     typedef std::map<std::string, TcpConnectionPtr> ConnectionMap;
