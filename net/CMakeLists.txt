@@ -8,6 +8,7 @@ set(net_SRCS
         Acceptor.cpp
         TcpServer.cpp
         TcpConnection.cpp
+        Buffer.cpp
 )
 
 add_library(muduo_net ${net_SRCS})
