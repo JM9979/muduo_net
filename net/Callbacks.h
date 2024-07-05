@@ -5,10 +5,12 @@
 #ifndef MUDUO_NET_CALLBACKS_H
 #define MUDUO_NET_CALLBACKS_H
 
+
 #include <memory>
 #include <functional>
 
 class TcpConnection;
+class Buffer;
 
 typedef std::shared_ptr<TcpConnection> TcpConnectionPtr;
 
@@ -19,6 +21,6 @@ using std::placeholders::_3;
 
 typedef std::function<void (const TcpConnectionPtr&)> ConnectionCallback;
 typedef std::function<void (const TcpConnectionPtr&)> CloseCallback;
-typedef std::function<void (const TcpConnectionPtr&, const char* , size_t)> MessageCallback;
+typedef std::function<void (const TcpConnectionPtr&, Buffer* , size_t)> MessageCallback;
 
 #endif //MUDUO_NET_CALLBACKS_H

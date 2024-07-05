@@ -7,6 +7,7 @@
 
 #include "noncopyable.h"
 #include "Callbacks.h"
+#include "Buffer.h"
 
 #include <memory>
 #include <netinet/in.h>
@@ -61,6 +62,7 @@ private:
     ConnectionCallback connectionCallback_;
     MessageCallback messageCallback_;
     CloseCallback closeCallback_;
+    Buffer inputBuffer_;
 };
 
 

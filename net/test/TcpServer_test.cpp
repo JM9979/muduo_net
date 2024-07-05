@@ -4,9 +4,12 @@
 
 #include "TcpServer.h"
 #include "EventLoop.h"
+#include "Buffer.h"
 
 #include <unistd.h>
 #include <cstring>
+
+class Buffer;
 
 void onConnection(const TcpConnectionPtr& conn) {
     if(conn->connected()) {
@@ -17,8 +20,9 @@ void onConnection(const TcpConnectionPtr& conn) {
     }
 }
 
-void onMessage(const TcpConnectionPtr & conn, const char* data, size_t n) {
+void onMessage(const TcpConnectionPtr & conn, Buffer* data, size_t n) {
     printf("onMessage: received %zd bytes from connection [%s]\n", n, conn->name().c_str());
+    printf("onMessage: %s\n", data->retrieveAsString(n).c_str());
 }
 
 int main() {
