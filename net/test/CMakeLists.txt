@@ -16,3 +16,6 @@ target_link_libraries(Acceptor_test muduo_net)
 
 add_executable(TcpServer_test TcpServer_test.cpp)
 target_link_libraries(TcpServer_test muduo_net)
+
+add_executable(SendData_test SendData_test.cpp)
+target_link_libraries(SendData_test muduo_net)

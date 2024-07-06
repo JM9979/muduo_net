@@ -35,18 +35,24 @@ public:
     void connectEstablished();
     void connectDestroyed();
 
+    void send(const std::string& message);
+    void shutdown();
+
     bool connected() { return state_ == kConnected; }
     const std::string& name() { return name_; }
     const struct sockaddr_in& peerAddr() { return peerAddr_; }
     const struct sockaddr_in& localAddr() { return localAddr_; }
 
 private:
-    enum StateE { kConnecting, kConnected, kDisconnected };
+    enum StateE { kConnecting, kConnected, kDisconnecting, kDisconnected };
     void setState(StateE s) { state_ = s; }
     void handleRead();
     void handleWrite();
     void handleClose();
     void handleError();
+
+    void shutdownInLoop();
+    void sendInLoop(const std::string& message);
 private:
 
     EventLoop* loop_;
@@ -63,6 +69,7 @@ private:
     MessageCallback messageCallback_;
     CloseCallback closeCallback_;
     Buffer inputBuffer_;
+    Buffer outputBuffer_;
 };
 
 

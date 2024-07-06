@@ -76,7 +76,9 @@ int Socket::accept(struct sockaddr_in& client_addr) {
 }
 
 void Socket::shutdownWrite() {
+    if(::shutdown(sockfd_, SHUT_WR) < 0) {
 
+    }
 }
 
 void Socket::setTcpNoDelay(bool on) {
