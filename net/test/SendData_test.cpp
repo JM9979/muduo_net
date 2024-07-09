@@ -20,6 +20,7 @@ void onConnection(const TcpConnectionPtr& conn) {
         printf("onConnection(): connection [%s] from %d : %d\n",
                conn->name().c_str(), conn->peerAddr().sin_addr.s_addr, conn->peerAddr().sin_port);
 
+        sleep(3);
         conn->send("Hello\r\n");
         conn->send("I am going to write more data\r\n");
         conn->shutdown();

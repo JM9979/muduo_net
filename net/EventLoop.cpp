@@ -7,6 +7,7 @@
 
 #include <poll.h>
 #include <sys/eventfd.h>
+#include <signal.h>
 
 thread_local EventLoop* t_loopInThisThread = nullptr;
 
@@ -124,3 +125,14 @@ void EventLoop::removeChannel(Channel *channel) {
     assertInLoopThread();
     poller_->removeChannel(channel);
 }
+
+class IgnoreSigPipe
+{
+public:
+    IgnoreSigPipe()
+    {
+        ::signal(SIGPIPE, SIG_IGN);
+    }
+};
+
+IgnoreSigPipe initObj;

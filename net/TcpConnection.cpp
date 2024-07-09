@@ -46,12 +46,12 @@ void TcpConnection::connectEstablished() {
 
 void TcpConnection::connectDestroyed() {
     loop_->assertInLoopThread();
-    assert(state_ == kConnected);
-    setState(kDisconnected);
-    channel_->disableAll();
-    // ?
-    connectionCallback_(shared_from_this());
+    if(state_ == kConnected) {
+        setState(kDisconnected);
+        channel_->disableAll();
 
+        connectionCallback_(shared_from_this());
+    }
     loop_->removeChannel(channel_.get());
 }
 
@@ -86,7 +86,8 @@ void TcpConnection::handleRead() {
 
 void TcpConnection::handleClose() {
     loop_->assertInLoopThread();
-    assert(state_ == kConnected);
+    assert(state_ == kConnected || state_ == kDisconnecting);
+    setState(kDisconnected);
     channel_->disableAll();
     closeCallback_(shared_from_this());
 }
