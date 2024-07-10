@@ -17,6 +17,7 @@
 #include <atomic>
 
 class EventLoop;
+class EventLoopThreadPool;
 
 class TcpServer : noncopyable {
 public:
@@ -25,14 +26,15 @@ public:
         kReusePort,
     };
 
+    EventLoop* getLoop() const { return loop_; }
 
     TcpServer(EventLoop* loop, const struct sockaddr_in& listenAddr, std::string &name);
     ~TcpServer();
 
+    void setThreadNum(int numThreads);
     void start();
 
     void setConnectionCallback(const ConnectionCallback& cb) { ConnectionCallback_ = cb; }
-
     void setMessageCallback(const MessageCallback& cb) { MessageCallback_ = cb; }
 
 
@@ -40,6 +42,7 @@ private:
     // Not thread safe, but in loop
     void newConnection(int sockfd, const struct sockaddr_in& peerAddr);
     void removeConnection(const TcpConnectionPtr&);
+    void removeConnectionInLoop(const TcpConnectionPtr&);
 
 private:
     typedef std::map<std::string, TcpConnectionPtr> ConnectionMap;
@@ -47,6 +50,7 @@ private:
     EventLoop *loop_;   // the acceptor loop
     std::string name_;
     std::unique_ptr<Acceptor> acceptor_;
+    std::shared_ptr<EventLoopThreadPool> threadPool_;
 
     ConnectionCallback ConnectionCallback_;
     MessageCallback MessageCallback_;

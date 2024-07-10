@@ -7,7 +7,7 @@
 
 #include <poll.h>
 #include <sys/eventfd.h>
-#include <signal.h>
+#include <csignal>
 
 thread_local EventLoop* t_loopInThisThread = nullptr;
 

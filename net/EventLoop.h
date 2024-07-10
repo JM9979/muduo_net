@@ -16,6 +16,7 @@
 #include <vector>
 #include <memory>
 #include <mutex>
+#include <iostream>
 
 class Poller;
 
@@ -35,6 +36,8 @@ public:
     void wakeup() const;
     void updateChannel(Channel*);
     void removeChannel(Channel*);
+
+    void getThreadId() const { std::cout << "Thread ID:" << threadId_ << std::endl; }
 private:
 
     void doPendingFunctors();

@@ -20,6 +20,7 @@ public:
     explicit EventLoopThread(const std::string& name = std::string());
     ~EventLoopThread();
     EventLoop* startLoop();
+    const std::string& name() const { return thread_.name(); }
 
 private:
     void threadFunc();

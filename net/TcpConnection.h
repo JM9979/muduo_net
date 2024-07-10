@@ -28,6 +28,9 @@ public:
                   const struct sockaddr_in& peerAddr,
                   const struct  sockaddr_in& localAddr);
     ~TcpConnection();
+
+    EventLoop* getLoop() { return loop_; }
+
     void setConnectionCallback(const ConnectionCallback& cb) { connectionCallback_ = cb; }
     void setOnMessageCallback(const MessageCallback& cb) { messageCallback_ = cb; }
     void setCloseCallback(const CloseCallback& cb) { closeCallback_ = cb; }
