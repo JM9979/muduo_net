@@ -12,6 +12,18 @@
 #include <algorithm>
 #include <string>
 
+// 为什么非阻塞网络编程的应用层Buffer是必要的？
+/*
+ * 读缓冲区: TCP是一个无边界的流式协议, 确保应用层接收到的数据是完整的
+ * 写缓冲区: 接收方速度没有发送方快时, 防止write阻塞线程
+ * */
+
+// Buffer介绍
+/*
+ * 基本数据结构是: vector<char>
+ * Buffer初始大小比较小, 大小是自适应的, 根据需要内部腾挪或扩容
+ * */
+
 class Buffer {
 public:
     static const size_t kCheapPrepend = 8;
@@ -108,8 +120,10 @@ private:
 
     void makeSpace(size_t len) {
         if(writableBytes() + prependableBytes() < len + kCheapPrepend) {
+            // 没有足够的空间扩充buffer大小
             buffer_.resize(writerIndex_ + len);
         } else {
+            // 有足够的内存所以进行内部腾挪
             assert(kCheapPrepend < readIndex_);
             size_t readable = readableBytes();
 
