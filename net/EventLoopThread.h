@@ -5,8 +5,8 @@
 #ifndef MUDUO_NET_EVENTLOOPTHREAD_H
 #define MUDUO_NET_EVENTLOOPTHREAD_H
 
-#include "Thread.h"
-#include "noncopyable.h"
+#include "base/Thread.h"
+#include "base/noncopyable.h"
 
 #include <atomic>
 #include <mutex>

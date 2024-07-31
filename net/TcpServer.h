@@ -5,7 +5,7 @@
 #ifndef MUDUO_NET_TCPSERVER_H
 #define MUDUO_NET_TCPSERVER_H
 
-#include "noncopyable.h"
+#include "base/noncopyable.h"
 #include "Acceptor.h"
 #include "TcpConnection.h"
 #include "Callbacks.h"

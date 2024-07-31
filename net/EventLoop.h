@@ -6,8 +6,8 @@
 #ifndef MUDUO_NET_EVENTLOOP_H
 #define MUDUO_NET_EVENTLOOP_H
 
-#include "noncopyable.h"
-#include "CurrentThread.h"
+#include "base/noncopyable.h"
+#include "base/CurrentThread.h"
 #include "Channel.h"
 
 #include <functional>

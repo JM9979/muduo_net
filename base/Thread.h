@@ -32,8 +32,8 @@ private:
     bool started_;
     bool joined_;
     tid tid_;
-    std::string name_;
     ThreadFunc func_;
+    std::string name_;
     CountDownLatch latch_;
     std::thread thread_;
 };

@@ -5,7 +5,7 @@
 #ifndef MUDUO_NET_SOCKET_H
 #define MUDUO_NET_SOCKET_H
 
-#include "noncopyable.h"
+#include "base/noncopyable.h"
 
 class Socket : noncopyable {
 public:

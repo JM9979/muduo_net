@@ -5,7 +5,7 @@
 #ifndef MUDUO_NET_CHANNEL_H
 #define MUDUO_NET_CHANNEL_H
 
-#include "noncopyable.h"
+#include "base/noncopyable.h"
 
 #include <functional>
 #include <memory>

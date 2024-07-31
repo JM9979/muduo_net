@@ -5,7 +5,7 @@
 #ifndef MUDUO_NET_ACCEPTOR_H
 #define MUDUO_NET_ACCEPTOR_H
 
-#include "noncopyable.h"
+#include "base/noncopyable.h"
 #include "Channel.h"
 #include "Socket.h"
 
