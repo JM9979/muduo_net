@@ -1,3 +1,9 @@
 ./cmake-build-debug/
 ./.idea/
 ./lib/
+./bazel-bin/
+./bazel-muduo_net/
+./bazel-out/
+./bazel-testlogs/
+./MODULE.bazel.lock
+./MODULE.bazel
