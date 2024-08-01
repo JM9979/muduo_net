@@ -2,10 +2,11 @@
 // Created by jm on 5/13/24.
 //
 
-#include "EventLoop.h"
+#include "net/EventLoop.h"
+#include "base/Thread.h"
+
 #include <iostream>
 #include <unistd.h>
-#include <Thread.h>
 
 
 void threadFunc() {

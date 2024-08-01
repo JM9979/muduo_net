@@ -3,4 +3,5 @@ cc_library(
     srcs = glob(["*.cpp"]),
     hdrs = glob(["*.h"]),
     deps = ["//base:muduo_base"],
+    visibility = ["//net/test:__pkg__"]
 )
